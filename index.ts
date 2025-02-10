@@ -24,6 +24,6 @@ setInterval(async () => {
   } catch (error) {
     console.error("Error in periodic fetch", error);
   }
-}, 5000);
+}, 300000);
 
 export { app };
