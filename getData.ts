@@ -1,4 +1,5 @@
 import axios from "axios";
+import "dotenv/config";
 
 export const getData = async () => {
   try {
@@ -6,8 +7,8 @@ export const getData = async () => {
       "https://crm-proxy.rolec-test.app/crm/vcaseconnect",
       {
         headers: {
-          Authorization: "Basic ZGV2ZWxvcG1lbnQ6QWJjZDEyMzQ=",
-          "x-authorization-token": "QBaAsRkA9eCrOYAJmP96LG16f8aoxxYV",
+          Authorization: process.env.AUTHORIZATION,
+          "x-authorization-token": process.env.X_AUTHORIZATION_TOKEN,
         },
       }
     );
