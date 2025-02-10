@@ -1,0 +1,27 @@
+{
+  "name": "sage-notifications",
+  "version": "1.0.0",
+  "description": "when a new job is available then we need send the data as a notifications",
+  "main": "index.ts",
+  "scripts": {
+    "test": "vitest",
+    "start": "ts-node index.ts"
+  },
+  "author": "rolec",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.13.1",
+    "@types/supertest": "^6.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
+  }
+}
