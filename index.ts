@@ -1,10 +1,28 @@
-/*-----------------------------Connecting to the sage-database:----------------------------------------------*/
 import express from "express";
 import bodyParser from "body-parser";
 import { getData } from "./getData";
+
+import { createClient } from "@libsql/client";
+
 const app = express();
 app.use(bodyParser.json());
 const port = 8080;
+
+export const turso = createClient({
+  url: process.env.TURSO_DATABASE_URL || "",
+  authToken: process.env.TURSO_AUTH_TOKEN,
+});
+
+async function executeQuery() {
+  try {
+    const result = await turso.execute("SELECT * FROM user");
+    console.log(result);
+  } catch (error) {
+    console.error("Error executing query", error);
+  }
+}
+
+executeQuery();
 
 app.get("/", async (req, res) => {
   try {
@@ -28,6 +46,37 @@ setInterval(async () => {
 }, 300000);
 
 export { app };
+
+/*-----------------------------Connecting to the sage-database:----------------------------------------------*/
+// import express from "express";
+// import bodyParser from "body-parser";
+// import { getData } from "./getData";
+// const app = express();
+// app.use(bodyParser.json());
+// const port = 8080;
+
+// app.get("/", async (req, res) => {
+//   try {
+//     const data = await getData();
+//     res.send(data);
+//   } catch (error) {
+//     res.status(500).send("Error fetching data");
+//   }
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server is running on port ${port}`);
+// });
+
+// setInterval(async () => {
+//   try {
+//     await getData();
+//   } catch (error) {
+//     console.error("Error in periodic fetch", error);
+//   }
+// }, 300000);
+
+// export { app };
 
 /*-------------------------------------------------------------------------------------------------------------*/
 
@@ -80,7 +129,7 @@ export { app };
 // }
 
 // // Example usage
-// sendPushNotification("ExponentPushToken[EeAlzqIccYHFtTgtgpr1-E]");
+// sendPushNotification("ExponentPushToken[o3B8HDFNrPvWr6VtfJ1451]");
 
 /*-------------------------------------------------------------------------------------------------------------*/
 
