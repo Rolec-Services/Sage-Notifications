@@ -1,21 +1,19 @@
-import express from "express";
-import bodyParser from "body-parser";
 import { getData } from "./getData";
-
 import { createClient } from "@libsql/client";
 
-const app = express();
-app.use(bodyParser.json());
-const port = 8080;
-
 export const turso = createClient({
-  url: process.env.TURSO_DATABASE_URL || "",
-  authToken: process.env.TURSO_AUTH_TOKEN,
+  url: "libsql://connect-rolecservices.turso.io",
+  authToken:
+    "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzM4MzQ0OTcsImlkIjoiNDI4MjZkMTktZWY1Ny00OGIyLWI3OTEtNmVmYzFkMTk3M2U5In0.sZgED9XH18pfnIHUBpmbPGV7WHXztmGf9Yq8yOSRFldYyiJGYoEimfDf8hMvrhtDH5hnIivuCyO_1tSsh27WAQ",
 });
 
 async function executeQuery() {
   try {
-    const result = await turso.execute("SELECT * FROM user");
+    const result = await turso.execute(`
+      SELECT electrician. *, external_type.*
+      FROM electrician
+      JOIN external_type ON electrician.uuid= external_type.electrician_uuid
+      `);
     console.log(result);
   } catch (error) {
     console.error("Error executing query", error);
@@ -24,28 +22,22 @@ async function executeQuery() {
 
 executeQuery();
 
-app.get("/", async (req, res) => {
-  try {
-    const data = await getData();
-    res.send(data);
-  } catch (error) {
-    res.status(500).send("Error fetching data");
-  }
-});
+// async function fetchData() {
+//   try {
+//     const data = await getData();
+//     console.log("Fetched data:", data);
+//   } catch (error) {
+//     console.error("Error fetching data", error);
+//   }
+// }
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// // setInterval(() => {
+// //   console.log("Fetching data...");
+// //   fetchData();
+// // }, 900000);
 
-setInterval(async () => {
-  try {
-    await getData();
-  } catch (error) {
-    console.error("Error in periodic fetch", error);
-  }
-}, 300000);
-
-export { app };
+// // // Initial fetch
+// fetchData();
 
 /*-----------------------------Connecting to the sage-database:----------------------------------------------*/
 // import express from "express";

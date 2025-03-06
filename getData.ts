@@ -4,7 +4,7 @@ import "dotenv/config";
 export const getData = async () => {
   try {
     const response = await axios.get(
-      "https://crm-proxy.rolec-test.app/crm/vcaseconnect",
+      "https://crm-proxy.rolec.app/crm/vcaseconnect",
       {
         headers: {
           Authorization: process.env.AUTHORIZATION,
@@ -12,7 +12,6 @@ export const getData = async () => {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching data", error);
