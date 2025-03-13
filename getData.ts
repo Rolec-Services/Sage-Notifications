@@ -19,5 +19,14 @@ export const getData = async () => {
   }
 };
 
+/*-----------------Fetching the sage person ID:-----------------*/
 // URL: https://crm-proxy.rolec.app/crm/vperson?select=pers_emailaddress&where=pers_emailaddress eq '${email}'&orderby=pers_updateddate desc
+/*----------------------END----------------------*/
+
+/*-----------------Filter out the specific installer:-----------------*/
 // URL: https://crm-proxy.rolec.app/crm/vcaseconnect?where=case_sc_installer eq '${installerID}'
+/*----------------------END----------------------*/
+
+/*-----------------Fetching the installers Details:-----------------*/
+// "https://crm-proxy.rolec.app/crm/vperson?where=pers_emailaddress eq 'shankaruday443@gmail.com'&select=pers_title,pers_firstname,pers_lastname,pers_emailaddress,pers_phonenumber,pers_companyid,pers_primaryaddressid,pers_c_companyname,pers_type,pers_status,pers_createddate,pers_updateddate",
+/*----------------------END----------------------*/
