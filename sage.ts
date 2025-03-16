@@ -28,7 +28,7 @@ export const getData = async () => {
 
 async function checkAndReturnPushNotificationToken(installerID: string) {
   try {
-    const muResult = await turso.execute(`
+    const tursoData = await turso.execute(`
       SELECT sage_person_id, 
       FROM electrician
       JOIN external_type ON electrician.uuid= external_type.electrician_uuid
@@ -38,9 +38,9 @@ async function checkAndReturnPushNotificationToken(installerID: string) {
     `);
     console.log(installerID);
 
-    if (muResult) {
-      console.log(JSON.parse(JSON.stringify(muResult)));
-      return muResult;
+    if (tursoData) {
+      console.log(JSON.parse(JSON.stringify(tursoData)));
+      return tursoData;
     } else {
       console.log(`No matching installer ID found for ${installerID}`);
       return null;
