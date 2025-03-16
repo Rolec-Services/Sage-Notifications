@@ -1,9 +1,7 @@
 const { Expo } = require("expo-server-sdk");
 
-// Create a new Expo SDK client
 let expo = new Expo();
 
-// Function to send a push notification
 interface Message {
   to: string;
   sound: string;
@@ -13,7 +11,6 @@ interface Message {
 }
 
 async function sendPushNotification(expoPushToken: string): Promise<void> {
-  // Create the message
   let messages: Message[] = [];
   if (!Expo.isExpoPushToken(expoPushToken)) {
     console.error(`Push token ${expoPushToken} is not a valid Expo push token`);
@@ -28,7 +25,6 @@ async function sendPushNotification(expoPushToken: string): Promise<void> {
     data: { someData: "goes here" },
   });
 
-  // Send the messages
   let chunks: Message[][] = expo.chunkPushNotifications(messages);
   let tickets: any[] = [];
   (async () => {
