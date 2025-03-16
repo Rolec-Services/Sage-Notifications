@@ -1,5 +1,3 @@
-/*-----------------Working with Expo Push Notifications:---------------------*/
-
 const { Expo } = require("expo-server-sdk");
 
 // Create a new Expo SDK client
