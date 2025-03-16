@@ -1,59 +1,74 @@
-import { getData } from "./getData";
+import axios from "axios";
+import "dotenv/config";
 import { createClient } from "@libsql/client";
 
-/*-----------------Fetching data from the sage-database:-----------------*/
-
-// async function fetchData() {
-//   try {
-//     const data = await getData();
-//     const resources = data.$resources;
-//     console.log("Data:", resources);
-//     if (resources && resources.length > 0) {
-//       const caseDetails = resources.map((item: any) => ({
-//         caseId: item.Case_CaseId,
-//         installerId: item.case_sc_installer,
-//       }));
-//       console.log("Case Details:", caseDetails);
-//     } else {
-//       console.log("No resources found.");
-//     }
-//   } catch (error) {
-//     console.error("Error fetching data", error);
-//   }
-// }
-
-// setInterval(() => {
-//   console.log("Fetching data...");
-//   fetchData();
-// }, 900000);
-
-// Initial fetch
-// fetchData();
-
-/*-------------------------------------------END--------------------------------------------*/
-
-/*--------------Connection to the turso-database:-----------------*/
-
 export const turso = createClient({
-  url: "libsql://connect-dev-2-rolecservices.turso.io",
+  url: "libsql://connect-rolecservices.turso.io",
   authToken:
-    "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzYyODQxODAsImlkIjoiNmMzZDBjNTItMGQzMS00MmMyLWJjMDItZTNhODg5MzlkMWRiIn0.PeuTWs2-cLla-OAnlDceS8Tiy9X-QO2UQAHI2nbSc8_2ErIPwv64U0OJi1H9l3XEuHN6fuw8n4JmBvvpqFE2DQ",
+    "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3MzM4MzQ0OTcsImlkIjoiNDI4MjZkMTktZWY1Ny00OGIyLWI3OTEtNmVmYzFkMTk3M2U5In0.sZgED9XH18pfnIHUBpmbPGV7WHXztmGf9Yq8yOSRFldYyiJGYoEimfDf8hMvrhtDH5hnIivuCyO_1tSsh27WAQ",
 });
 
-async function executeQuery() {
+export const getData = async () => {
   try {
-    const result = await turso.execute(`
-      SELECT user.id, pushNotificationsToken, sage_person_id
+    const response = await axios.get(
+      "https://crm-proxy.rolec.app/crm/vcaseconnect",
+      {
+        headers: {
+          Authorization: process.env.AUTHORIZATION,
+          "x-authorization-token": process.env.X_AUTHORIZATION_TOKEN,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching data", error);
+    throw error;
+  }
+};
+
+async function checkAndReturnPushNotificationToken(installerID: string) {
+  try {
+    const muResult = await turso.execute(`
+      SELECT sage_person_id, 
       FROM electrician
       JOIN external_type ON electrician.uuid= external_type.electrician_uuid
       JOIN external ON external_type.external_uuid = external.uuid
       JOIN user ON external.user_id = user.id
-      `);
-    console.log(JSON.parse(JSON.stringify(result)));
+      WHERE sage_person_id = '${installerID}'
+    `);
+    console.log(installerID);
+
+    if (muResult) {
+      console.log(JSON.parse(JSON.stringify(muResult)));
+      return muResult;
+    } else {
+      console.log(`No matching installer ID found for ${installerID}`);
+      return null;
+    }
   } catch (error) {
     console.error("Error executing query", error);
+    throw error;
   }
 }
 
-executeQuery();
-/*--------------------------------END---------------------------------*/
+async function fetchDataAndCheck() {
+  try {
+    const data = await getData();
+    const resources = data.$resources || [];
+
+    for (const item of resources) {
+      const installerID = item.case_sc_installer;
+      const caseId = item.Case_CaseId;
+      const token = await checkAndReturnPushNotificationToken(installerID);
+      if (token) {
+        console.log(
+          `Push notification token for installer ${installerID} (Case ID: ${caseId}): ${token}`
+        );
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching data and checking", error);
+  }
+}
+
+fetchDataAndCheck();
