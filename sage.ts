@@ -15,9 +15,7 @@ export const turso = createClient({
 });
 
 if (!tursoUrl || !tursoAuthToken) {
-  throw new Error(
-    "TURSO_URL and TURSO_AUTH_TOKEN must be defined in the environment variables"
-  );
+  throw new Error("TURSO_URL or TURSO_AUTH_TOKEN is invalid.");
 }
 
 export const getData = async () => {
