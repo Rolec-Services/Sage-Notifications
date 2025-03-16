@@ -7,7 +7,9 @@
     "test": "vitest",
     "start": "ts-node index.ts",
     "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' index.ts",
-    "sage": "nodemon --watch './**/*.ts' --exec 'ts-node' sage.ts"
+    "sage": "nodemon --watch './**/*.ts' --exec 'ts-node' sage.ts",
+    "uday": "nodemon --watch './**/*.ts' --exec 'ts-node' test.ts",
+    "check": "nodemon --watch './**/*.ts' --exec 'ts-node' check.ts"
   },
   "author": "rolec",
   "license": "ISC",
