@@ -6,9 +6,7 @@ const tursoUrl = process.env.TURSO_DATABASE_URL;
 const tursoAuthToken = process.env.TURSO_AUTH_TOKEN;
 
 if (!tursoUrl || !tursoAuthToken) {
-  throw new Error(
-    "TURSO_URL and TURSO_AUTH_TOKEN must be defined in the environment variables"
-  );
+  throw new Error("invalid turso url or auth token");
 }
 
 export const turso = createClient({
